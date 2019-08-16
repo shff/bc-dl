@@ -19,10 +19,6 @@ def read_js_object(codes):
   code = re.sub("\n", " ", code)
   code = re.sub("(\{|,)[ \t\n]*([a-zA-Z0-9_]+)[ \t\n]*:", lambda m: "%s \"%s\":" % (m.group(1), m.group(2)), code)
   code = re.sub("\" +\+ +\"", "", code)
-  code = re.sub("\"visit\"", "", code)
-  code = re.sub("\"remembers\"", "remembers", code)
-  code = re.sub("\"plus\"", "plus", code)
-  code = re.sub("\"Zidane\"", "Zidane", code)
   return json.loads(code)
 
 try:
@@ -37,7 +33,7 @@ try:
   html = HTMLParser.HTMLParser()
 
   print "Downloading cover art"
-  cover_art_obj = urllib2.urlopen(art.replace("https", "http"))
+  cover_art_obj = urllib2.urlopen(art)
   cover_art = cover_art_obj.read()
 
   for track in tracks['trackinfo']:
