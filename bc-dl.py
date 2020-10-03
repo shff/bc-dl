@@ -15,24 +15,16 @@ import html.parser
 import eyed3
 from eyed3.id3.frames import ImageFrame
 
-def read_js_object(codes):
-  code = re.sub(",\s*\/\/(.*)\n", ", ", codes, flags=re.MULTILINE)
-  code = re.sub("^ *\/\/(.*)\n", "", code, flags=re.MULTILINE)
-  code = re.sub("\n", " ", code)
-  code = re.sub("(\{|,)[ \t\n]*([a-zA-Z0-9_]+)[ \t\n]*:", lambda m: "%s \"%s\":" % (m.group(1), m.group(2)), code)
-  code = re.sub("\" +\+ +\"", "", code)
-  return json.loads(code)
-
 try:
   ctx = ssl.create_default_context()
   ctx.check_hostname = False
   ctx.verify_mode = ssl.CERT_NONE
 
   url = sys.argv[1]
-  directory = "~/Downloads"
+  directory = "~/Downloads/"
 
   content = urllib.request.urlopen(url, context=ctx).read().decode('utf-8')
-  tracks = read_js_object(content.split("var TralbumData = ")[1].split("};")[0] + "}")
+  tracks = json.loads(content.split(' data-tralbum="')[1].split('"')[0].replace('&quot;', '"'))
   art = content.split('<link rel="image_src" href="')[1].split('">')[0]
 
   tmpdir = tempfile.mkdtemp()
@@ -56,7 +48,7 @@ try:
 
     url = track['file']['mp3-128']
 
-    filename = "%s/%02d - %s.mp3" % (directory, track_num, song_title.replace("/", " - "))
+    filename = "%s/%02d %s.mp3" % (directory, track_num, song_title.replace("/", " - "))
     filename = os.path.expanduser(filename)
     tmp_file = tmpdir + "/track%d.mp3" % track_num
 
