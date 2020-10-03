@@ -26,6 +26,7 @@ try:
   content = urllib.request.urlopen(url, context=ctx).read().decode('utf-8')
   tracks = json.loads(content.split(' data-tralbum="')[1].split('"')[0].replace('&quot;', '"'))
   art = content.split('<link rel="image_src" href="')[1].split('">')[0]
+  genre = re.compile('<a class="tag" href="https:\/\/bandcamp.com\/tag\/(.+?)\?').findall(content)[0].title()
 
   tmpdir = tempfile.mkdtemp()
 
@@ -75,6 +76,7 @@ try:
     audiofile.tag.album = album_title
     audiofile.tag.album_artist = artist
     audiofile.tag.title = song_title
+    audiofile.tag.genre = genre
     audiofile.tag.track_num = (track_num, track_count)
     audiofile.tag.disc_num = (1, 1)
     audiofile.tag.recording_date = album_year
