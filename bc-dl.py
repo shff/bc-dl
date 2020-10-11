@@ -24,7 +24,7 @@ try:
   directory = "~/Downloads/"
 
   content = urllib.request.urlopen(url, context=ctx).read().decode('utf-8')
-  tracks = json.loads(content.split(' data-tralbum="')[1].split('"')[0].replace('&quot;', '"'))
+  tracks = json.loads(html.unescape(content.split(' data-tralbum="')[1].split('"')[0]))
   art = content.split('<link rel="image_src" href="')[1].split('">')[0]
   genre = re.compile('<a class="tag" href="https:\/\/bandcamp.com\/tag\/(.+?)\?').findall(content)[0].title()
 
