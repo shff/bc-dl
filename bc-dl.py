@@ -26,7 +26,7 @@ try:
   content = urllib.request.urlopen(url, context=ctx).read().decode('utf-8')
   tracks = json.loads(html.unescape(content.split(' data-tralbum="')[1].split('"')[0]))
   art = content.split('<link rel="image_src" href="')[1].split('">')[0]
-  genre = re.compile('<a class="tag" href="https:\/\/bandcamp.com\/tag\/(.+?)\?').findall(content)[0].title()
+  genre = re.compile('<a class="tag" href="https:\/\/[a-z]{8}.com\/tag\/(.+?)\?').findall(content)[0].title()
 
   tmpdir = tempfile.mkdtemp()
 
@@ -88,7 +88,7 @@ try:
 
     os.rename(tmp_file, filename.encode('utf-8'))
 except IndexError as e:
-  print("Invalid Bandcamp data. Either the URL is correct or their website changed.")
+  print("Invalid track data. Either the URL is correct or their website changed.")
 except urllib.error.URLError as e:
   print("Download error: " + str(e.reason))
 except KeyboardInterrupt as e:
