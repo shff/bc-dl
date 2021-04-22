@@ -21,7 +21,7 @@ try:
   ctx.verify_mode = ssl.CERT_NONE
 
   url = sys.argv[1]
-  directory = "~/Downloads/"
+  directory = "~/Music/Music/Media.localized/Automatically Add to Music.localized"
 
   content = urllib.request.urlopen(url, context=ctx).read().decode('utf-8')
   tracks = json.loads(html.unescape(content.split(' data-tralbum="')[1].split('"')[0]))
