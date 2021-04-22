@@ -1,0 +1,32 @@
+name: build
+on: [push]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: brew install upx
+      - run: pip3 install eyeD3 pyinstaller
+      - run: pyinstaller ./bc-dl.py --onefile
+      - uses: actions/upload-artifact@v2
+        with:
+          name: bc-dl
+          path: ./dist/bc-dl
+      - uses: actions/create-release@v1
+        id: create_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: release-${{ github.sha }}
+          release_name: Release ${{ github.sha }}
+          draft: false
+          prerelease: false
+      - uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist/bc-dl
+          asset_name: bc-dl
+          asset_content_type: application/octet-stream
